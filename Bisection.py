@@ -31,12 +31,20 @@ def root(xL, xU, eS, maxIter):
         yL = f(xL)
         yU = f(xU)
         yM = f(xM)
+        if i > 0:
+            if xM == 0:
+                eA = abs((xM-xOldM)/(xM+sys.float_info.epsilon))*100
+            else:
+                eA = abs((xM-xOldM)/xM)*100
+            if eA <= eS:
+                return xM
+
         if yL*yM < 0:
             xU = xM
         elif yU*yM < 0:
             xL = xM
         elif yL*yM == 0:  # yL=0 or yM=0
-            if yL == 0:
+            if yL == 0:  
                 return xL
             else:
                 return xM
@@ -45,15 +53,8 @@ def root(xL, xU, eS, maxIter):
                 return xU
             else:
                 return xM
-        if i > 0:
-            if xM == 0:
-                eA = abs((xM-xOldM)/(xM+sys.float_info.epsilon))*100
-            else:
-                eA = abs((xM-xOldM)/xM)*100
-            if eA <= eS:
-                return xM
         xOldM = xM
-    return xM
+    return
 
 
 def table(xL, xU, eS, maxIter):
@@ -111,9 +112,12 @@ def main():
     xL = float(input("Estimate lower bound: "))
     xU = float(input("Estimate upper bound: "))
     maxIter = int(input("Enter max allowed iteration: "))
-    print("Depth of the submerged ball is {:.6f}  meter".format(
-        root(xL, xU, 0.5, maxIter)))
-    table(xL, xU, 0.5, 20)
+    ans = root(xL, xU, 0.5, maxIter)
+    if ans == None:
+        print("No solution exists")
+    else:
+        print("Solution: ", ans)
+    table(xL, xU, 0.05, 20)
 
 
 if __name__ == "__main__":
