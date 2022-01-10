@@ -18,7 +18,6 @@ def interpolate(f: list, xi: int, n: int) -> float:
     # Initialize result
     result = 0.0
     for i in range(n):
-
         # Compute individual terms of above formula
         term = f[i].y
         for j in range(n):
@@ -34,7 +33,6 @@ def interpolate(f: list, xi: int, n: int) -> float:
 if __name__ == "__main__":
     # creating an array of 4 known data points
     f = [Data(0, 2), Data(1, 3), Data(2, 12), Data(5, 147)]
-
     # Using the interpolate function to obtain a data point
     # corresponding to x=3
     print("Value of f(3) is :", interpolate(f, 3, 4))

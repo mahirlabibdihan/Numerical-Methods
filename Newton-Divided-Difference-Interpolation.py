@@ -72,6 +72,7 @@ def main():
     print("\nValue at", value, "is",
           round(applyFormula(value, x, y, n), 2))
 
+
     # This code is contributed by mits
 if __name__ == "__main__":
-    main()  
+    main()
