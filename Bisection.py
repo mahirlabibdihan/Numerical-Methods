@@ -44,7 +44,7 @@ def root(xL, xU, eS, maxIter):
         elif yU*yM < 0:
             xL = xM
         elif yL*yM == 0:  # yL=0 or yM=0
-            if yL == 0:  
+            if yL == 0:
                 return xL
             else:
                 return xM
@@ -97,7 +97,7 @@ def table(xL, xU, eS, maxIter):
 
 
 def drawGraph():
-    x = np.array(np.arange(-10, 10, 1))
+    x = np.arange(-10, 10, 1)
     y = f(x)
     plt.plot(x, y)
     plt.grid()

@@ -1,41 +1,54 @@
-# Python3 program for implementation
-# of Lagrange's Interpolation
+import numpy as np
+import matplotlib.pyplot as plt
 
-# To represent a data point corresponding to x and y = f(x)
-class Data:
+
+class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
-# function to interpolate the given data points
-# using Lagrange's formula
-# xi -> corresponds to the new data point
-# whose value is to be obtained
-# n -> represents the number of known data points
 
-
-def interpolate(f: list, xi: int, n: int) -> float:
-    # Initialize result
+def interpolate(f: list, xi, n: int):
     result = 0.0
     for i in range(n):
-        # Compute individual terms of above formula
         term = f[i].y
         for j in range(n):
             if j != i:
-                term = term * (xi - f[j].x) / (f[i].x - f[j].x)
-
-        # Add current term to result
+                if f[i].x == f[j].x:
+                    return [False, result]
+                term *= ((xi - f[j].x) / (f[i].x - f[j].x))
         result += term
-    return result
+    return [True, result]
 
 
-# Driver Code
+def drawGraph(f, n):
+    x = np.array([f[i].x for i in range(n)])
+    y = np.array([f[i].y for i in range(n)])
+    plt.scatter(x, y)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
+
+
 if __name__ == "__main__":
-    # creating an array of 4 known data points
-    f = [Data(0, 2), Data(1, 3), Data(2, 12), Data(5, 147)]
-    # Using the interpolate function to obtain a data point
-    # corresponding to x=3
-    print("Value of f(3) is :", interpolate(f, 3, 4))
+    n = int(input())
+    f = np.zeros(shape=n, dtype=Point)
+    for i in range(n):
+        x, y = map(int, input().split())
+        f[i] = Point(x, y)
+    value = int(input())
+    drawGraph(f, n)
+    status, result = interpolate(f, value, n)
+    if status:
+        print("Value is : %.4f" % result)
+    else:
+        print("Can't be calculated")
 
-# This code is contributed by
-# sanjeev2552
+'''
+4
+0 2
+1 3
+2 12
+5 147
+3
+'''

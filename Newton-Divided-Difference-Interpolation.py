@@ -1,78 +1,89 @@
-# Python3 program for implementing
-# Newton divided difference formula
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Function to find the product term
-def proterm(i, value, x):
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+def productTerm(i, value, x):
     pro = 1
     for j in range(i):
-        pro = pro * (value - x[j])
+        pro *= (value - x[j])
     return pro
-
-# Function for calculating
-# divided difference table
 
 
 def dividedDiffTable(x, y, n):
     for i in range(1, n):
         for j in range(n - i):
+            if x[j] == x[i + j]:
+                return [False, y]
             y[j][i] = ((y[j][i - 1] - y[j + 1][i - 1]) / (x[j] - x[i + j]))
-    return y
-
-# Function for applying Newton's
-# divided difference formula
+    return [True, y]
 
 
 def applyFormula(value, x, y, n):
-    sum = y[0][0]
-    for i in range(1, n):
-        sum = sum + (proterm(i, value, x) * y[0][i])
-
-    return sum
-
-# Function for displaying divided
-# difference table
+    sum = 0
+    for i in range(n):
+        sum += (productTerm(i, value, x) * y[0][i])
+    return [True, sum]
 
 
 def printDiffTable(y, n):
-
     for i in range(n):
         for j in range(n - i):
-            print(round(y[i][j], 4), "\t",
-                  end=" ")
-
+            print("%10.4f" % y[i][j], end="  ")
         print("")
 
-# Driver Code
+
+def interpolate(f, value, n, show=True):
+    x = np.zeros(shape=n)
+    y = np.zeros(shape=(n, n))
+    for i in range(n):
+        x[i] = f[i].x
+        y[i][0] = f[i].y
+    status, y = dividedDiffTable(x, y, n)
+    if not status:
+        return [False, 0]
+    if show:
+        printDiffTable(y, n)
+    return applyFormula(value, x, y, n)
+
+
+def drawGraph(f, n):
+    x = np.array([f[i].x for i in range(n)])
+    y = np.array([f[i].y for i in range(n)])
+    plt.scatter(x, y)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
 
 
 def main():
-    # number of inputs given
-    n = 4
-    y = [[0 for i in range(10)]
-         for j in range(10)]
-    x = [10, 15, 20, 22.5]
-
-    # y[][] is used for divided difference
-    # table where y[][0] is used for input
-    y[0][0] = 227.04
-    y[1][0] = 362.78
-    y[2][0] = 517.35
-    y[3][0] = 602.97
-
-    # calculating divided difference table
-    y = dividedDiffTable(x, y, n)
-
-    # displaying divided difference table
-    printDiffTable(y, n)
-
-    # value to be interpolated
-    value = 16
-
-    # printing the value
-    print("\nValue at", value, "is",
-          round(applyFormula(value, x, y, n), 2))
+    n = int(input())
+    f = np.zeros(shape=n, dtype=Point)
+    for i in range(n):
+        x, y = map(float, input().split())
+        f[i] = Point(x, y)
+    value = float(input())
+    drawGraph(f, n)
+    status, result = interpolate(f, value, n)
+    if status:
+        print("Value is : %.4f" % result)
+    else:
+        print("Can't be calculated")
 
 
-    # This code is contributed by mits
 if __name__ == "__main__":
     main()
+
+'''
+4
+10 227.04
+15 362.78
+20 517.35
+22.5 602.97
+16
+'''
