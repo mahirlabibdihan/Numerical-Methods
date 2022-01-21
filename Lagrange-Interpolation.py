@@ -8,16 +8,16 @@ class Point:
         self.y = y
 
 
-def interpolate(f: list, xi, n: int):
+def interpolate(f: list, x, n: int):
     result = 0.0
     for i in range(n):
-        term = f[i].y
+        Li = 1
         for j in range(n):
             if j != i:
                 if f[i].x == f[j].x:
-                    return [False, result]
-                term *= ((xi - f[j].x) / (f[i].x - f[j].x))
-        result += term
+                    return [False, 0]
+                Li *= ((x - f[j].x) / (f[i].x - f[j].x))
+        result += Li*f[i].y
     return [True, result]
 
 
@@ -34,9 +34,9 @@ if __name__ == "__main__":
     n = int(input())
     f = np.zeros(shape=n, dtype=Point)
     for i in range(n):
-        x, y = map(int, input().split())
+        x, y = map(float, input().split())
         f[i] = Point(x, y)
-    value = int(input())
+    value = float(input())
     drawGraph(f, n)
     status, result = interpolate(f, value, n)
     if status:

@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# More points doesn't mean less error
+
 
 class Point:
     def __init__(self, x, y):
@@ -38,12 +40,54 @@ def printDiffTable(y, n):
         print("")
 
 
-def interpolate(f, value, n, show=True):
+def nearestPoints(f, n, value):
+    # We need to choose n data points that are closest to 'value' , that also bracket 'value' to evaluate it.
+    m = len(f)
+    if m < n:
+        return [False, None, None]
     x = np.zeros(shape=n)
     y = np.zeros(shape=(n, n))
+    temp1 = {}
+    for i in range(m):
+        temp1[f[i].x] = abs(f[i].x-value)
+    d = sorted(temp1, key=temp1.get)    # Sort dictionary
+
+    hasLowerPoints = False
+    hasUpperPoints = False
     for i in range(n):
-        x[i] = f[i].x
-        y[i][0] = f[i].y
+        x[i] = d[i]
+        if(d[i] >= value):
+            hasUpperPoints = True
+        if(d[i] <= value):
+            hasLowerPoints = True
+    # Checking if choosen points have bracket 'value' or not
+    if not hasLowerPoints:
+        for i in range(m):
+            if(d[i] <= value):
+                x[n-1] = d[i]
+                hasLowerPoints = True
+                break
+    if not hasUpperPoints:
+        for i in range(m):
+            if(d[i] >= value):
+                x[n-1] = d[i]
+                hasUpperPoints = True
+                break
+    if not hasLowerPoints or not hasUpperPoints:
+        return [False, None, None]
+    x = np.sort(x)
+    for i in range(n):
+        for j in range(m):
+            if(f[j].x == x[i]):
+                y[i][0] = f[j].y
+                break
+    return [True, x, y]
+
+
+def interpolate(f, value, n, show=True):
+    status, x, y = nearestPoints(f, n, value)
+    if not status:
+        return [False, 0]
     status, y = dividedDiffTable(x, y, n)
     if not status:
         return [False, 0]
@@ -62,14 +106,14 @@ def drawGraph(f, n):
 
 
 def main():
-    n = int(input())
-    f = np.zeros(shape=n, dtype=Point)
-    for i in range(n):
+    m = int(input())
+    f = np.zeros(shape=m, dtype=Point)
+    for i in range(m):
         x, y = map(float, input().split())
         f[i] = Point(x, y)
     value = float(input())
-    drawGraph(f, n)
-    status, result = interpolate(f, value, n)
+    drawGraph(f, m)
+    status, result = interpolate(f, value, 4)
     if status:
         print("Value is : %.4f" % result)
     else:
