@@ -2,7 +2,7 @@ import sys
 
 
 def f(x):
-    return (1 / (1 + x * x))
+    return (1 / x)
 
 
 def trapezoidal(a, b, eS, maxIter):

@@ -11,7 +11,6 @@ def partialPivot(A, n, k):
         if abs(A[i][k]) > abs(A[absMaxIdx][k]):
             absMaxIdx = i
     if absMaxIdx != k:
-        # A[j], A[absMaxIdx] = np.array(A[absMaxIdx]), np.array(A[j])
         A[[k, absMaxIdx], :] = A[[absMaxIdx, k], :]
 
 
@@ -42,8 +41,9 @@ def GaussianElimination(A, B, pivot=True, showall=True):
             return [False, x]
         if showall:
             print('Step {:d}:'.format(k+1))
-        for i in range(k+1, n):   # goes right -> i sub steps
+        for i in range(k+1, n):   # goes right -> (n-k) sub steps
             factor = A[i][k]/A[k][k]
+            # Changes the whole i-th row
             for j in range(n+1):
                 A[i][j] = A[i][j] - factor*A[k][j]
             if showall:
