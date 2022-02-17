@@ -51,11 +51,15 @@ def GaussianElimination(A, B, pivot=True, showall=True):
                 printMatrix(A, n)
     # Back substitution
     for i in range(n-1, -1, -1):
-        if A[i][i] == 0:
-            return [False, x]
         x[i] = A[i][n]
         for j in range(i+1, n):
             x[i] = x[i]-x[j]*A[i][j]
+        if A[i][i] == 0:
+            if(x[i] == 0):
+                print("No unique solution.Infinite solutions.")
+            else:
+                print("No solution")
+            return [False, x]
         x[i] = x[i]/A[i][i]
     return [True, x]
 

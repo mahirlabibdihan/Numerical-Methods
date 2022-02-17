@@ -29,7 +29,9 @@ def dividedDiffTable(x, y, n):
 def applyFormula(value, x, y, n):
     sum = 0
     for i in range(n):
-        sum += (productTerm(i, value, x) * y[0][i])
+        b = productTerm(i, value, x)
+        print(f'b{i}={b}')
+        sum += (b * y[0][i])
     return [True, sum]
 
 
@@ -112,7 +114,7 @@ def main():
         x, y = map(float, input().split())
         f[i] = Point(x, y)
     value = float(input())
-    drawGraph(f, m)
+    # drawGraph(f, m)
     status, result = interpolate(f, value, 4)
     if status:
         print("Value is : %.4f" % result)

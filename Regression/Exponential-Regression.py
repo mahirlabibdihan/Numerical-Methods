@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+import pandas as pd
 
 
 def linear(x, y):
@@ -11,10 +12,12 @@ def linear(x, y):
     s = np.sum(y)
     a_1 = (n*r-q*s) / (n*p - q*q)
     a_0 = (p*s-q*r) / (n*p - q*q)
+    data = {'x': np.append(x, q), 'y': np.append(
+        y, s), 'x^2': np.append(x*x, p), 'xy': np.append(x*y, r)}
+    df = pd.DataFrame(data)
+    df.index = np.arange(1, len(df)+1)
+    print(df)
     return (a_0, a_1)
-
-
-
 
 
 def exponential(x, y):

@@ -2,21 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sys
+import pandas as pd
 
 
 def f(x):
-    # return math.sin(x)
-    return x*x*x - 0.165*x*x + 0.0003993
-    # return (x-1)**3+0.512
-    # return x*x+2
-    # return -(x-2)**2+2
+    return x**3 - 0.165*x**2 + 3.993*10**(-4)
 
 
 def fd(x):
-    # return math.cos(x)
-    return 3*x*x - 0.33*x
-    # return 3*(x-1)**2
-    # return -2*(x-2)
+    return 3*x**2 - 0.33*x
 
 
 def root(x, eS, maxIter):
@@ -38,6 +32,27 @@ def root(x, eS, maxIter):
     return
 
 
+def table(init, eS, maxIter):
+    eA = np.zeros(maxIter+1)
+    x = np.zeros(maxIter+1)
+    x[0] = init
+    for i in range(0, maxIter):
+        if fd(x[i]) == 0:
+            print("Error: Slope of current point is 0.")
+            sys.exit()
+        x[i+1] = x[i] - (f(x[i])/fd(x[i]))
+        if x[i+1] == 0:
+            eA[i+1] = abs((x[i+1]-x[i])/(x[i+1]+sys.float_info.epsilon))*100
+        else:
+            eA[i+1] = abs((x[i+1]-x[i])/x[i+1])*100
+        if eA[i+1] <= eS:
+            break
+
+    data = {'x': x, 'eA': eA}
+    df = pd.DataFrame(data)
+    print(df)
+
+
 def drawGraph():
     x = np.array(np.arange(-1, 1, .01))
     y = f(x)
@@ -49,15 +64,22 @@ def drawGraph():
     plt.show()
 
 
-def main():
-    drawGraph()
+def take_input():
     x = float(input("Estimate root: "))
+    eS = float(input('Enter max tolerance: '))
     maxIter = int(input("Enter max allowed iteration: "))
-    ans = root(x, 0.05, maxIter)
-    if ans == None:
-        print("No solution exists")
-    else:
-        print("Solution: ", ans)
+    table(x, eS, maxIter)
+
+
+def main():
+    # drawGraph()
+    # take_input()
+    table(.05, .05, 10)
+    # ans = root(x, 0.05, maxIter)
+    # if ans == None:
+    #     print("No solution exists")
+    # else:
+    #     print("Solution: ", ans)
 
 
 if __name__ == "__main__":

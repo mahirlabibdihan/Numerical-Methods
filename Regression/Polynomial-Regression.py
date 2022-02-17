@@ -70,6 +70,8 @@ def polynomial(x, y, n):
             A[r][c] = tmp
             r -= 1
             c += 1
+    # print(A)
+    # print(B)
     return GaussianElimination(A, B)
 
 

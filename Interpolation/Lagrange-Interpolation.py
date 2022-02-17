@@ -17,6 +17,7 @@ def interpolate(f: list, x, n: int):
                 if f[i].x == f[j].x:
                     return [False, 0]
                 Li *= ((x - f[j].x) / (f[i].x - f[j].x))
+        print(f'L{i}={Li}')
         result += Li*f[i].y
     return [True, result]
 
@@ -37,7 +38,7 @@ if __name__ == "__main__":
         x, y = map(float, input().split())
         f[i] = Point(x, y)
     value = float(input())
-    drawGraph(f, n)
+    # drawGraph(f, n)
     status, result = interpolate(f, value, n)
     if status:
         print("Value is : %.4f" % result)
